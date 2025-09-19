@@ -2,52 +2,33 @@ import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = "https://enkqruajxnolwpuxosfg.supabase.co";
 const SUPABASE_SERVICE_ROLE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVua3FydWFqeG5vbHdwdXhvc2ZnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODEyNTM1NywiZXhwIjoyMDczNzAxMzU3fQ.r7_VMrIvFX2LQo-pxtp-bKK39vPdASvaRR4E9WeVd4o"; // Supabasedan oling, maxfiy!
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVua3FydWFqeG5vbHdwdXhvc2ZnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODEyNTM1NywiZXhwIjoyMDczNzAxMzU3fQ.r7_VMrIvFX2LQo-pxtp-bKK39vPdASvaRR4E9WeVd4o"; // Maxfiy!
+
+export const config = {
+  api: {
+    bodyParser: false, // FormData uchun
+  },
+};
+
+import formidable from "formidable";
+import fs from "fs";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Faqat POST so‘rovi ishlaydi bratishka!" });
+    return res.status(405).json({ error: "Faqat POST so‘rovi ishlaydi!" });
   }
 
-  const {
-    avatar_url,
-    login,
-    password,
-    role,
-    first_name,
-    last_name,
-    middle_name,
-    birth_date,
-    gender,
-    phone,
-    passport_serial,
-    position,
-  } = req.body;
+  // FormData parse qilamiz
+  const form = new formidable.IncomingForm();
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      return res.status(400).json({ error: "Form parsing error" });
+    }
 
-  const email = `${login}@124maktab.uz`;
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-  // Supabase Authda yangi user yaratamiz
-  const { data, error } = await supabase.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
-    user_metadata: { login, role },
-  });
-
-  if (error) {
-    return res.status(400).json({ error: error.message });
-  }
-
-  // Profiles table’ga qo‘shamiz
-  const user_id = data.user.id;
-  const { error: profileError } = await supabase.from("profiles").insert([
-    {
-      id: user_id,
+    const {
       login,
+      password,
       role,
-      email,
       first_name,
       last_name,
       middle_name,
@@ -56,18 +37,74 @@ export default async function handler(req, res) {
       phone,
       passport_serial,
       position,
+    } = fields;
+
+    const email = `${login}@124maktab.uz`;
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    // 1. Rasmni Supabase Storage'ga yuklaymiz
+    let avatar_url = "";
+    if (files.photo) {
+      const photo = files.photo;
+      const photoExt = photo.originalFilename.split('.').pop();
+      const photoFileName = `avatars/${Date.now()}_${login}.${photoExt}`;
+      const photoData = fs.readFileSync(photo.filepath);
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(photoFileName, photoData, {
+          contentType: photo.mimetype,
+          upsert: true,
+        });
+
+      if (uploadError) {
+        return res.status(400).json({ error: "Rasm yuklashda xato: " + uploadError.message });
+      }
+
+      avatar_url = `${SUPABASE_URL}/storage/v1/object/public/avatars/${photoFileName}`;
+    }
+
+    // 2. Supabase Auth’da user yaratamiz
+    const { data, error } = await supabase.auth.admin.createUser({
+      email,
       password,
-      avatar_url
-    },
-  ]);
+      email_confirm: true,
+      user_metadata: { login, role },
+    });
 
-  if (profileError) {
-    return res.status(400).json({ error: profileError.message });
-  }
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
 
-  return res
-    .status(200)
-    .json({ success: true, message: "Yangi user yaratildi!" });
+    // 3. Profiles jadvaliga yozamiz
+    const user_id = data.user.id;
+    const { error: profileError } = await supabase.from("profiles").insert([
+      {
+        id: user_id,
+        login,
+        role,
+        email,
+        first_name,
+        last_name,
+        middle_name,
+        birth_date,
+        gender,
+        phone,
+        passport_serial,
+        position,
+        password,
+        avatar_url,
+      },
+    ]);
+
+    if (profileError) {
+      return res.status(400).json({ error: profileError.message });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Yangi user yaratildi!",
+      avatar_url,
+    });
+  });
 }
-
-
