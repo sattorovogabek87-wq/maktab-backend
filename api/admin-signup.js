@@ -6,7 +6,7 @@ const SUPABASE_SERVICE_ROLE_KEY =
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Faqat POST so‘rovi ishlaydi!" });
+    return res.status(405).json({ error: "Faqat POST so‘rovi ishlaydi bratishka!" });
   }
 
   const {
@@ -69,4 +69,5 @@ export default async function handler(req, res) {
     .status(200)
     .json({ success: true, message: "Yangi user yaratildi!" });
 }
+
 
