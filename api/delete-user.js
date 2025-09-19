@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Auth o‘chirish xatosi: " + authError.message });
     }
 
-    return res.status(200).json({ success: true, message: "User muvaffaqiyatli o‘chirildi!" });
+    return res.status(200).json({ success: true, message: "Hodim muvaffaqiyatli o‘chirildi!" });
   } catch (err) {
     return res.status(500).json({ error: "Server xatosi: " + err.message });
   }
