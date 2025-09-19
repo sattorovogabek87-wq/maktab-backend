@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   }
 
   const {
+    avatar_url,
     login,
     password,
     role,
@@ -56,6 +57,7 @@ export default async function handler(req, res) {
       passport_serial,
       position,
       password,
+      avatar_url
     },
   ]);
 
@@ -67,3 +69,4 @@ export default async function handler(req, res) {
     .status(200)
     .json({ success: true, message: "Yangi user yaratildi!" });
 }
+
