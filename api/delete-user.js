@@ -28,11 +28,6 @@ export default async function handler(req, res) {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // 1. Auth dan foydalanuvchini o‘chiramiz
-    const { error: authError } = await supabase.auth.admin.deleteUser(user_id);
-    if (authError) {
-      return res.status(400).json({ error: "Auth o‘chirish xatosi: " + authError.message });
-    }
 
     // 2. Profiles jadvalidan o‘chiramiz
     const { error: dbError } = await supabase
@@ -42,6 +37,12 @@ export default async function handler(req, res) {
 
     if (dbError) {
       return res.status(400).json({ error: "Profiles o‘chirish xatosi: " + dbError.message });
+    }
+
+     // 1. Auth dan foydalanuvchini o‘chiramiz
+    const { error: authError } = await supabase.auth.admin.deleteUser(user_id);
+    if (authError) {
+      return res.status(400).json({ error: "Auth o‘chirish xatosi: " + authError.message });
     }
 
     return res.status(200).json({ success: true, message: "User muvaffaqiyatli o‘chirildi!" });
