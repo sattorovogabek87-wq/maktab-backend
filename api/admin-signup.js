@@ -70,6 +70,8 @@ export default async function handler(req, res) {
       }
 
       avatar_url = `${SUPABASE_URL}/storage/v1/object/public/avatars/${photoFileName}`;
+    }else{
+      avatar_url = null;
     }
 
     // 2. Supabase Auth’da user yaratamiz
@@ -116,4 +118,5 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
