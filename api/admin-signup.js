@@ -14,8 +14,16 @@ import formidable from "formidable";
 import fs from "fs";
 
 export default async function handler(req, res) {
+  // CORS ruxsat berish
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Faqat POST so‘rovi ishlaydi!" });
+    return res.status(405).json({ error: "Faqat POST so‘rovi ishlaydi bratishka!" });
   }
 
   // FormData parse qilamiz
@@ -108,3 +116,4 @@ export default async function handler(req, res) {
     });
   });
 }
+
