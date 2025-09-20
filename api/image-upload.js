@@ -5,10 +5,7 @@ const SUPABASE_URL = "https://enkqruajxnolwpuxosfg.supabase.co";
 const SUPABASE_SERVICE_ROLE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVua3FydWFqeG5vbHdwdXhvc2ZnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODEyNTM1NywiZXhwIjoyMDczNzAxMzU3fQ.r7_VMrIvFX2LQo-pxtp-bKK39vPdASvaRR4E9WeVd4o"; // Supabasedan oling, maxfiy!
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY // ⚠️ Faqat backendda!
-);
+const supabase = createClient(SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY // ⚠️ Faqat backendda!);
 
 export const config = {
   api: {
