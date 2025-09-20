@@ -45,9 +45,10 @@ export default async function handler(req, res) {
       phone,
       passport_serial,
       position,
+      email,
     } = fields;
 
-    const email = `${login}@124maktab.uz`;
+    const email_signup = `${login}@124maktab.uz`;
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // 1. Rasmni Supabase Storage'ga yuklaymiz
@@ -76,7 +77,7 @@ export default async function handler(req, res) {
 
     // 2. Supabase Auth’da user yaratamiz
     const { data, error } = await supabase.auth.admin.createUser({
-      email,
+      email_signup,
       password,
       email_confirm: true,
       user_metadata: { login, role },
@@ -104,6 +105,7 @@ export default async function handler(req, res) {
         position,
         password,
         avatar_url,
+        email,
       },
     ]);
 
@@ -118,6 +120,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
