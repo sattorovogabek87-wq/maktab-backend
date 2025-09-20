@@ -105,7 +105,6 @@ export default async function handler(req, res) {
         position,
         password,
         avatar_url,
-        email,
       },
     ]);
 
@@ -120,6 +119,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
