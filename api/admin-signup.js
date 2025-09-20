@@ -77,7 +77,7 @@ export default async function handler(req, res) {
 
     // 2. Supabase Auth’da user yaratamiz
     const { data, error } = await supabase.auth.admin.createUser({
-      email_signup,
+      email:email_signup,
       password,
       email_confirm: true,
       user_metadata: { login, role },
@@ -119,6 +119,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
