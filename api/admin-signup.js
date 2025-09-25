@@ -44,6 +44,7 @@ export default async function handler(req, res) {
       gender,
       phone,
       passport_serial,
+      location,
       position,
       email,
     } = fields;
@@ -102,6 +103,7 @@ export default async function handler(req, res) {
         gender,
         phone,
         passport_serial,
+        location,
         position,
         password,
         avatar_url,
@@ -119,6 +121,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
