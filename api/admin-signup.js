@@ -101,7 +101,7 @@ export default async function handler(req, res) {
         middle_name,
         birth_date,
         gender,
-        phone,
+        phone:`+998${phone}`,
         passport_serial,
         location,
         position,
@@ -121,6 +121,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
