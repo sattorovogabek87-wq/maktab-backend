@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "files topilmadi bratishka:" + files});
     }
     const photoData = fs.readFileSync(files.photo.filepath);
-    return res.status(400).json({ error: "photo mana kor bratishka: " + photoData});
+    return res.status(404).json({ error: "photo mana kor bratishka: " + photoData});
     
     if(!files.photo){
       avatar_url = null;
@@ -130,6 +130,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
