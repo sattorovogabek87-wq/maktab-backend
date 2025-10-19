@@ -51,12 +51,11 @@ export default async function handler(req, res) {
 
     const email_signup = `${login}@124maktab.uz`;
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
+    let avatar_url = "";
     // 1. Rasmni Supabase Storage'ga yuklaymiz
     if(!file.photo){
       avatar_url = null;
     }else{
-      let avatar_url = "";
     if (files.photo) {
       const photo = files.photo;
       const photoExt = photo.originalFilename.split('.').pop();
@@ -125,6 +124,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
