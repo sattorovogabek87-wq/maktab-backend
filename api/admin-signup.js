@@ -53,7 +53,10 @@ export default async function handler(req, res) {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // 1. Rasmni Supabase Storage'ga yuklaymiz
-    let avatar_url = "";
+    if(!file.photo){
+      avatar_url = null;
+    }else{
+      let avatar_url = "";
     if (files.photo) {
       const photo = files.photo;
       const photoExt = photo.originalFilename.split('.').pop();
@@ -75,6 +78,7 @@ export default async function handler(req, res) {
     }else{
       avatar_url = null;
     }
+    } 
 
     // 2. Supabase Auth’da user yaratamiz
     const { data, error } = await supabase.auth.admin.createUser({
@@ -121,6 +125,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
