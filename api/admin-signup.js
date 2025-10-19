@@ -53,10 +53,11 @@ export default async function handler(req, res) {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     let avatar_url = "";
     // 1. Rasmni Supabase Storage'ga yuklaymiz
-    if(fs.readFileSync(files.photo.filepath)){
-      return res.status(400).json({ error: "Rasm bor: " +  fs.readFileSync(files.photo.filepath)});
+    const dateP = fs.readFileSync(files.photo.filepath)
+    if(dateP){
+      return res.status(400).json({ error: "Rasm bor: " +  dateP});
     }else{
-      return res.status(400).json({ error: "Rasm yoq: " +  fs.readFileSync(files.photo.filepath)});
+      return res.status(400).json({ error: "Rasm yoq: " +  dateP});
     }
    if (fs.readFileSync(files.photo.filepath).length) {
       const photo = files.photo;
@@ -125,6 +126,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
