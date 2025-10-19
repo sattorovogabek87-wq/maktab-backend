@@ -53,16 +53,7 @@ export default async function handler(req, res) {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     let avatar_url = "";
     // 1. Rasmni Supabase Storage'ga yuklaymiz
-    if(!files){
-      return res.status(404).json({ error: "files topilmadi bratishka:" + files});
-    }
-    const photoData = fs.readFileSync(files.photo.filepath);
-    return res.status(404).json({ error: "photo mana kor bratishka: " + photoData});
-    
-    if(!files.photo){
-      avatar_url = null;
-    }else{
-    if (files.photo) {
+   if (fs.readFileSync(files.photo.filepath)) {
       const photo = files.photo;
       const photoExt = photo.originalFilename.split('.').pop();
       const photoFileName = `avatars/${Date.now()}_${login}.${photoExt}`;
@@ -83,7 +74,6 @@ export default async function handler(req, res) {
     }else{
       avatar_url = null;
     }
-    } 
 
     // 2. Supabase Auth’da user yaratamiz
     const { data, error } = await supabase.auth.admin.createUser({
@@ -130,6 +120,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
