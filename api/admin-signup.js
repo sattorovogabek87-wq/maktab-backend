@@ -53,6 +53,11 @@ export default async function handler(req, res) {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     let avatar_url = "";
     // 1. Rasmni Supabase Storage'ga yuklaymiz
+    if(!files){
+      return res.status(404).json({ error: "Rasm yuklashda xato: " + files});
+    }
+    return res.status(400).json({ error: "Rasm yuklashda xato: " + files.photo});
+    
     if(!files.photo){
       avatar_url = null;
     }else{
@@ -124,6 +129,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
