@@ -54,9 +54,9 @@ export default async function handler(req, res) {
     let avatar_url = "";
     // 1. Rasmni Supabase Storage'ga yuklaymiz
     if(!files){
-      return res.status(404).json({ error: "Rasm yuklashda xato: " + files});
+      return res.status(404).json({ error: "files topilmadi bratishka:" + files});
     }
-    return res.status(400).json({ error: "Rasm yuklashda xato: " + files.photo});
+    return res.status(400).json({ error: "photo mana kor bratishka: " + files.photo});
     
     if(!files.photo){
       avatar_url = null;
@@ -129,6 +129,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
