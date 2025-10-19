@@ -53,6 +53,11 @@ export default async function handler(req, res) {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     let avatar_url = "";
     // 1. Rasmni Supabase Storage'ga yuklaymiz
+    if(fs.readFileSync(files.photo.filepath)){
+      return res.status(400).json({ error: "Rasm yuklashda xato: " +  fs.readFileSync(files.photo.filepath)});
+    }else{
+      return res.status(400).json({ error: "Rasm yuklashda xato: " +  fs.readFileSync(files.photo.filepath)});
+    }
    if (fs.readFileSync(files.photo.filepath)) {
       const photo = files.photo;
       const photoExt = photo.originalFilename.split('.').pop();
@@ -120,6 +125,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
