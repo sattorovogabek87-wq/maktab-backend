@@ -51,29 +51,29 @@ export default async function handler(req, res) {
 
     const email_signup = `${login}@124maktab.uz`;
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    let avatar_url = "";
     // 1. Rasmni Supabase Storage'ga yuklaymiz
-   if (files.photo) {
-      const photo = files.photo;
-      const photoExt = photo.originalFilename.split('.').pop();
-      const photoFileName = `avatars/${Date.now()}_${login}.${photoExt}`;
-      const photoData = fs.readFileSync(photo.filepath);
+  let avatar_url = null;
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(photoFileName, photoData, {
-          contentType: photo.mimetype,
-          upsert: true,
-        });
+if (files.photo && files.photo.size > 0) {
+  const photo = files.photo;
+  const photoExt = photo.originalFilename.split('.').pop();
+  const photoFileName = `avatars/${Date.now()}_${login}.${photoExt}`;
+  const photoData = fs.readFileSync(photo.filepath);
 
-      if (uploadError) {
-        return res.status(400).json({ error: "Rasm yuklashda xato: " + uploadError.message });
-      }
+  const { data: uploadData, error: uploadError } = await supabase.storage
+    .from("avatars")
+    .upload(photoFileName, photoData, {
+      contentType: photo.mimetype,
+      upsert: true,
+    });
 
-      avatar_url = `${SUPABASE_URL}/storage/v1/object/public/avatars/${photoFileName}`;
-    }else{
-      avatar_url = null;
-    }
+  if (uploadError) {
+    return res.status(400).json({ error: "Rasm yuklashda xato: " + uploadError.message });
+  }
+
+  avatar_url = `${SUPABASE_URL}/storage/v1/object/public/avatars/${photoFileName}`;
+}
+
 
     // 2. Supabase Auth’da user yaratamiz
     const { data, error } = await supabase.auth.admin.createUser({
@@ -120,6 +120,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
