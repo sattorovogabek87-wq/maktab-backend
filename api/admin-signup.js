@@ -53,13 +53,7 @@ export default async function handler(req, res) {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     let avatar_url = "";
     // 1. Rasmni Supabase Storage'ga yuklaymiz
-    const dateP = fs.readFileSync(files.photo.filepath).trim()
-    if(dateP){
-      return res.status(400).json({ error: "Rasm bor: " +  dateP});
-    }else{
-      return res.status(400).json({ error: "Rasm yoq: " +  dateP});
-    }
-   if (fs.readFileSync(files.photo.filepath).length) {
+   if (files.photo) {
       const photo = files.photo;
       const photoExt = photo.originalFilename.split('.').pop();
       const photoFileName = `avatars/${Date.now()}_${login}.${photoExt}`;
@@ -126,6 +120,7 @@ export default async function handler(req, res) {
     });
   });
 }
+
 
 
 
